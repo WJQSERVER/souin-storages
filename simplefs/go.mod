@@ -1,4 +1,4 @@
-module github.com/darkweak/storages/simplefs
+module github.com/WJQSERVER/souin-storages/simplefs
 
 go 1.22.1
 
