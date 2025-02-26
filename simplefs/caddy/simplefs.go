@@ -3,10 +3,10 @@ package caddy
 import (
 	"net/http"
 
+	"github.com/WJQSERVER/souin-storages/simplefs"
 	caddy "github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/darkweak/storages/core"
-	"github.com/darkweak/storages/simplefs"
 )
 
 const moduleName = "simplefs"
