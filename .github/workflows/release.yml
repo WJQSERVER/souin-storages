@@ -1,8 +1,7 @@
 name: Tag submodules on release
 
 on:
-  create:
-    tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: write
