@@ -1,4 +1,4 @@
-module github.com/darkweak/storages/core
+module github.com/WJQSERVER/souin-storages/core
 
 go 1.22.1
 
