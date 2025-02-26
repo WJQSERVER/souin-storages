@@ -2,6 +2,7 @@ package simplefs
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"errors"
 	"fmt"
@@ -19,7 +20,6 @@ import (
 	"github.com/darkweak/storages/core"
 	"github.com/dustin/go-humanize"
 	"github.com/jellydator/ttlcache/v3"
-	"github.com/klauspost/compress/zstd" // 导入 zstd 库
 	"github.com/pierrec/lz4/v4"
 )
 
@@ -33,7 +33,7 @@ type Simplefs struct {
 	actualSize    int64         // 当前缓存的实际大小（字节）
 	directorySize int64         // 最大目录大小（字节），-1 表示无限制
 	mu            sync.Mutex    // 互斥锁，用于同步访问 actualSize 和 directorySize
-	compression   string        // 使用的压缩方法 ("lz4", "zstd", "" 表示不压缩) // 压缩选项
+	compression   string        // 使用的压缩方法 ("lz4", "gzip", "" 表示不压缩)
 }
 
 // onEvict 是一个回调函数，当缓存中的项目被驱逐时调用。
@@ -46,7 +46,7 @@ func Factory(simplefsCfg core.CacheProvider, logger core.Logger, stale time.Dura
 	var directorySize int64
 
 	// debug
-	logger.Infof("Debug, SimpleFS with ZSTD")
+	logger.Infof("Debug, SimpleFS with GZIP and LZ4") // 修改 debug 日志
 
 	storagePath := simplefsCfg.Path // 从配置中获取存储路径
 	size := 0                       // 默认缓存大小
@@ -207,17 +207,17 @@ func (provider *Simplefs) Get(key string) []byte {
 			provider.logger.Errorf("无法使用 lz4 解压缩键 %s 的数据: %v", key, err)
 			return nil // 解压缩失败，返回 nil
 		}
-	case "zstd":
-		provider.logger.Debugf("尝试使用 zstd 解压缩键 %s", key)
-		r, err := zstd.NewReader(bytes.NewReader(byteValue))
+	case "gzip": // 添加 gzip 解压缩
+		provider.logger.Debugf("尝试使用 gzip 解压缩键 %s", key)
+		r, err := gzip.NewReader(bytes.NewReader(byteValue))
 		if err != nil {
-			provider.logger.Errorf("无法创建 zstd 解压缩读取器: %v", err)
+			provider.logger.Errorf("无法创建 gzip 解压缩读取器: %v", err)
 			return nil // 解压缩失败，返回 nil
 		}
 		defer r.Close()
 		decompressedData, err = io.ReadAll(r)
 		if err != nil {
-			provider.logger.Errorf("无法使用 zstd 解压缩键 %s 的数据: %v", key, err)
+			provider.logger.Errorf("无法使用 gzip 解压缩键 %s 的数据: %v", key, err)
 			return nil // 解压缩失败，返回 nil
 		}
 	case "": // 未压缩的情况
@@ -271,25 +271,29 @@ func (provider *Simplefs) SetMultiLevel(baseKey, variedKey string, value []byte,
 	now := time.Now()
 
 	var compressed bytes.Buffer
-	var w *lz4.Writer // 在 if 块外声明压缩写入器
+	var w *lz4.Writer   // 在 if 块外声明 lz4 压缩写入器
+	var zw *gzip.Writer // 在 if 块外声明 gzip 压缩写入器
+	var err error
 
 	// 根据压缩选项压缩数据
 	switch provider.compression {
-	case "zstd":
-		zw, err := zstd.NewWriter(&compressed)
+	case "gzip": // 添加 gzip 压缩
+		provider.logger.Debugf("尝试使用 gzip 压缩键 %s", variedKey)
+		zw, err = gzip.NewWriterLevel(&compressed, gzip.DefaultCompression) // 使用默认压缩级别
 		if err != nil {
-			provider.logger.Errorf("无法为键 %s 创建 zstd 压缩写入器: %v", variedKey, err)
+			provider.logger.Errorf("无法为键 %s 创建 gzip 压缩写入器: %v", variedKey, err)
 			return err
 		}
 		defer zw.Close()
 		if _, err = zw.Write(value); err != nil {
-			provider.logger.Errorf("无法使用 zstd 压缩键 %s 的数据: %v", variedKey, err)
+			provider.logger.Errorf("无法使用 gzip 压缩键 %s 的数据: %v", variedKey, err)
 			return err
 		}
 	case "lz4", "": // "lz4" 或 不压缩 (默认为 "lz4" 以保持向后兼容)
+		provider.logger.Debugf("尝试使用 lz4 压缩键 %s", variedKey)
 		w = lz4.NewWriter(&compressed)
 		defer w.Close()
-		_, err := w.ReadFrom(bytes.NewReader(value))
+		_, err = w.ReadFrom(bytes.NewReader(value))
 		if err != nil {
 			provider.logger.Errorf("无法使用 lz4 压缩键 %s 的数据: %v", variedKey, err)
 			return err
