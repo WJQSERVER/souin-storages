@@ -45,6 +45,9 @@ func onEvict(path string) error {
 func Factory(simplefsCfg core.CacheProvider, logger core.Logger, stale time.Duration) (core.Storer, error) {
 	var directorySize int64
 
+	// debug
+	logger.Infof("Debug, SimpleFS with ZSTD")
+
 	storagePath := simplefsCfg.Path // 从配置中获取存储路径
 	size := 0                       // 默认缓存大小
 	directorySize = -1              // 默认目录大小无限制

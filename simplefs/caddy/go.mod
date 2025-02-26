@@ -1,13 +1,13 @@
-module github.com/darkweak/storages/simplefs/caddy
+module github.com/WJQSERVER/souin-storages/simplefs/caddy
 
 go 1.23.6
 
 toolchain go1.24.0
 
 require (
+	github.com/WJQSERVER/souin-storages/simplefs v0.0.2
 	github.com/caddyserver/caddy/v2 v2.9.1
 	github.com/darkweak/storages/core v0.0.13
-	github.com/darkweak/storages/simplefs v0.0.13
 )
 
 require (
@@ -30,6 +30,7 @@ require (
 	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/coreos/go-oidc/v3 v3.12.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.6 // indirect
+	github.com/darkweak/storages/simplefs v0.0.0-00010101000000-000000000000 // indirect
 	github.com/dgraph-io/badger v1.6.2 // indirect
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
 	github.com/dgraph-io/ristretto v0.2.0 // indirect

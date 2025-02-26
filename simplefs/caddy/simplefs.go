@@ -39,6 +39,8 @@ func (b *Simplefs) Provision(ctx caddy.Context) error {
 		return err
 	}
 
+	logger.Info("SimpleFS 存储已启动") // 类型断言失败时的默认日志
+
 	core.RegisterStorage(storer)
 
 	return nil
