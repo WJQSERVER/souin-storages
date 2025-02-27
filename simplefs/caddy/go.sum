@@ -42,8 +42,8 @@ github.com/Microsoft/go-winio v0.6.2 h1:F2VQgta7ecxGYO8k3ZZz3RS8fVIXVxONVUPlNERo
 github.com/Microsoft/go-winio v0.6.2/go.mod h1:yd8OoFMLzJbo9gZq8j5qaps8bJ9aShtEA8Ipt1oGCvU=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/WJQSERVER/souin-storages/simplefs v0.0.5 h1:qN6CJ2GkJ9yFOY6kp56CfgP/OQv7SJ1nVnavCsBU3T8=
-github.com/WJQSERVER/souin-storages/simplefs v0.0.5/go.mod h1:ywT7iif+qV6mRipNt1/fUX4Nd/Bl3qk32wrsXcoqY3A=
+github.com/WJQSERVER/souin-storages/simplefs v0.0.6 h1:YYLVHHriL+5w5lQiWOuewL5X/wcJ1TNzHkHd/bAe2mM=
+github.com/WJQSERVER/souin-storages/simplefs v0.0.6/go.mod h1:ywT7iif+qV6mRipNt1/fUX4Nd/Bl3qk32wrsXcoqY3A=
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239/go.mod h1:2FmKhYUyUczH0OGQWaF5ceTx0UBShxjsH6f8oGKYe2c=
 github.com/antlr4-go/antlr/v4 v4.13.1 h1:SqQKkuVZ+zWkMMNkjy5FZe5mr5WURWnlpmOuzYWrPrQ=
 github.com/antlr4-go/antlr/v4 v4.13.1/go.mod h1:GKmUxMtwp6ZgGwZSva4eWPC5mS6vUAmOABFgjdkM7Nw=

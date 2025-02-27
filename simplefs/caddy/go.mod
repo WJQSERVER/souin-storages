@@ -5,7 +5,7 @@ go 1.23.6
 toolchain go1.24.0
 
 require (
-	github.com/WJQSERVER/souin-storages/simplefs v0.0.5
+	github.com/WJQSERVER/souin-storages/simplefs v0.0.6
 	github.com/caddyserver/caddy/v2 v2.9.1
 	github.com/darkweak/storages/core v0.0.13
 )
